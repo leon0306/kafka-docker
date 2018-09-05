@@ -4,18 +4,18 @@ MAINTAINER Boxuan <chenboxuan3@xdf.com>
 
 COPY consumer.properties /opt/kafka/config/consumer.properties
 COPY producer.properties /opt/kafka/config/producer.properties
-COPY kafka_plain_jaas.conf /opt/kafka/config/kafka_plain_jaas.conf
-COPY jmxremote.access /usr/lib/jvm/java-1.8-openjdk/jre/lib/management/jmxremote.access
-COPY jmxremote.password /usr/lib/jvm/java-1.8-openjdk/jre/lib/management/jmxremote.password
+COPY kafka_jaas.conf /opt/kafka/config/kafka_jaas.conf
+COPY jmxremote.access /opt/kafka/config/jmxremote.access
+COPY jmxremote.password /opt/kafka/config/jmxremote.password
 
 ENV KAFKA_DELETE_TOPIC_ENABLE="true" \
     KAFKA_SECURITY_INTER_BROKER_PROTOCOL="SASL_PLAINTEXT" \
     KAFKA_SASL_ENABLED_MECHANISMS="PLAIN" \
     KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL="PLAIN" \
     JMX_PORT="1099" \
-    KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=true -Dcom.sun.management.jmxremote.access.file=/usr/lib/jvm/java-1.8-openjdk/jre/lib/management/jmxremote.access -Dcom.sun.management.jmxremote.password.file=/usr/lib/jvm/java-1.8-openjdk/jre/lib/management/jmxremote.password -Dcom.sun.management.jmxremote.ssl=false -Djava.security.auth.login.config=/opt/kafka/config/kafka_plain_jaas.conf"
+    KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=true -Dcom.sun.management.jmxremote.access.file=/opt/kafka/config/jmxremote.access -Dcom.sun.management.jmxremote.password.file=/opt/kafka/config/jmxremote.password -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=192.168.212.128 -Dcom.sun.management.jmxremote.rmi.port=1099 -Djava.security.auth.login.config=/opt/kafka/config/kafka_jaas.conf"
 
-RUN chown 600 /usr/lib/jvm/java-1.8-openjdk/jre/lib/management/jmxremote.password \
+RUN chown 600 /opt/kafka/config/jmxremote.* \
  && alias kafka-console-producer.sh='kafka-console-producer.sh --producer.config /opt/kafka/config/producer.properties' \
  && alias kafka-console-consumer.sh='kafka-console-consumer.sh --consumer.config /opt/kafka/config/consumer.properties' \
  && alias kafka-producer-perf-test.sh='kafka-producer-perf-test.sh --producer.config /opt/kafka/config/producer.properties' \
